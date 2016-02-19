@@ -6,7 +6,9 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -18,6 +20,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
+import microsim.annotation.ModelParameter;
+import microsim.data.db.ExperimentParameter;
 import microsim.engine.EngineListener;
 import microsim.engine.SimulationEngine;
 import microsim.engine.SimulationManager;
@@ -749,6 +753,38 @@ public class MicrosimShell extends JFrame {
 				parameterFrames.clear();
 				for (SimulationManager model : controller.callerEngine.getModelArray()) {
 					List<Field> fields = ParameterInspector.extractModelParameters(model.getClass());
+
+					//Check that getter and setter exists for each model parameter (to ensure ability to control via microsim.shell GUI)
+					HashSet<String> getters = new HashSet<String>();
+					HashSet<String> setters = new HashSet<String>();			
+					Method[] methods = model.getClass().getMethods();
+
+					for(Method method : methods){
+						if(isGetter(method)) {
+							getters.add(method.getName());
+						}
+						else if(isSetter(method)) {
+							setters.add(method.getName());
+						}
+					}
+					
+					for(Field modelParameter : fields) {
+						String modelParameterName = modelParameter.getName();
+						String capModelParameterName = modelParameterName.substring(0, 1).toUpperCase() + modelParameterName.substring(1, modelParameterName.length());		//Ensure first letter of name is capitalised
+						String getterName = "get" + capModelParameterName;
+						String setterName = "set" + capModelParameterName;
+						
+						if(!getters.contains(getterName)) {
+							if(!getters.contains("is" + capModelParameterName))		//handles case for boolean 'is' getter methods
+								throw new RuntimeException("Model parameter " + modelParameterName + " has no getter method.  Please create a getter method called " + getterName + " in the " + model.getClass() + " class to enable this model parameter to be controlled via the GUI.");
+						}
+						
+						else if(!setters.contains(setterName)) {
+							throw new RuntimeException("Model parameter " + modelParameterName + " has no setter method.  Please create a setter method called " + setterName + " in the " + model.getClass() + " class to enable this model parameter to be controlled via the GUI.");
+						}
+					}
+										
+					
 					if (fields.size() > 0) {
 						ParameterFrame parameterFrame = new ParameterFrame(model);
 						GuiUtils.addWindow(parameterFrame);
@@ -763,6 +799,20 @@ public class MicrosimShell extends JFrame {
 		}
 
 	}
+	
+	private static boolean isGetter(Method method){
+		  if(!(method.getName().startsWith("get")||method.getName().startsWith("is")))		return false;
+		  if(method.getParameterTypes().length != 0)	return false;  
+		  if(void.class.equals(method.getReturnType()))	return false;
+		  return true;
+	}
+
+	private static boolean isSetter(Method method){
+		  if(!method.getName().startsWith("set"))		return false;
+		  if(method.getParameterTypes().length != 1)	return false;
+		  return true;
+	}
+
 
 	/**
 	 * This method initializes jBtnReload
