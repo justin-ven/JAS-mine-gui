@@ -570,7 +570,8 @@ public class MicrosimShell extends JFrame {
 //		}
 
 		public void navigateWebSite() {
-			String command, path = "http://jaslibrary.sourceforge.net";
+//			String command, path = "http://jaslibrary.sourceforge.net";
+			String command, path = "http://www.jas-mine.net";
 			if (System.getProperty("file.separator").equals("/"))
 				command = "netscape " + path;
 			else
