@@ -1294,7 +1294,7 @@ public class MicrosimShell extends JFrame {
 	private javax.swing.JMenuItem getJMenuHelpAbout() {
 		if (jMenuHelpAbout == null) {
 			jMenuHelpAbout = new javax.swing.JMenuItem();
-			jMenuHelpAbout.setText("About JAS");
+			jMenuHelpAbout.setText("About JAS-mine");
 			jMenuHelpAbout.setIcon(new javax.swing.ImageIcon(getClass()
 					.getResource("/microsim/gui/icons/msIco.gif")));
 			jMenuHelpAbout

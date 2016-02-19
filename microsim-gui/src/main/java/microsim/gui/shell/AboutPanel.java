@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -70,7 +72,7 @@ BorderLayout borderLayout1 = new BorderLayout();
     int areaHeight = imageJAS.getIconHeight() + 80;
 
     if (getWidth() > imageJAS.getIconWidth())
-      leftCorner = (getWidth() - imageJAS.getIconWidth()) / 2;
+      leftCorner = (getWidth() - imageJAS.getIconWidth() - 40) / 2;
 
     if (getHeight() > areaHeight)
       upperCorner = (getHeight() - areaHeight) / 2;
@@ -82,15 +84,21 @@ BorderLayout borderLayout1 = new BorderLayout();
     Font font = new Font("Arial", Font.BOLD, 12);
     Font font2 = new Font("Script", Font.BOLD, 12);
     g.setFont(font);
-    int start = 160 + upperCorner;
-    g.drawString("Version 2.1.0", leftCorner + 10, start + 10);
-    g.drawString("Copyright (C) 2002-13 Michele Sonnessa", leftCorner + 10, start + 30);
+//    int start = 160 + upperCorner;
+    int start = 30 + upperCorner;
+    leftCorner += 160;
+//    g.drawString("Version 3", leftCorner + 10, start + 10);
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("yy");
+    g.drawString("Copyright (C) 2014-" + sdf.format(new Date()) + " Ross E. Richardson", leftCorner + 10, start + 30);
+    g.drawString("& Matteo Richiardi", leftCorner + 135, start + 50);
     g.setFont(font2);
-    g.drawString("(m.sonnessa@zero11.it)", leftCorner + 30, start + 50);
-    g.setFont(font);
-    g.drawString("Distributed under GNU Lesser General Public License", leftCorner + 10, start + 70);
-    g.setFont(font2);
+    g.drawString("https://github.com/jasmineRepo", leftCorner + 10, start + 70);
+//    g.setFont(font2);
     g.setColor(new Color(63, 0xc3, 0xe7));
-    g.drawString("http://www.jasimulation.org", leftCorner + 10, start + 90);
+    g.drawString("http://www.jas-mine.net", leftCorner + 10, start + 90);
+    g.setColor(Color.black);
+    g.setFont(font);
+    g.drawString("Distributed under GNU Lesser General Public License", leftCorner - 40, start + 110);
   }
 }

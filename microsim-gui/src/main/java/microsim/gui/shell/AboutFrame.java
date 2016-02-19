@@ -87,15 +87,15 @@ public class AboutFrame extends JFrame {
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((int) ((d.getWidth() - 400) / 2),
 				(int) ((d.getHeight() - 400) / 2));
-		setSize(400, 400);
-		setTitle("About JAS");
+		setSize(450, 450);
+		setTitle("About JAS-mine");
 	}
 
 	public javax.swing.JTabbedPane getJTabbedPane() {
 		if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
 			jTabbedPane.setBorder(new TitledBorder(""));
-			jTabbedPane.add(getJMainPanel(), "About JAS");
+			jTabbedPane.add(getJMainPanel(), "About JAS-mine");
 			jTabbedPane.add(getJLicensePanel(), "License");
 			//jTabbedPane.add(getJLibrariesPanel(), "Libraries");
 			jTabbedPane.add(getJSystemPanel(), "System");
@@ -131,7 +131,7 @@ public class AboutFrame extends JFrame {
 	private String getLicence() {
 		try {
 			final BufferedInputStream bis = new BufferedInputStream(
-					AboutFrame.class.getResourceAsStream("/jaslicense.txt")
+					AboutFrame.class.getResourceAsStream("/jasmine_license.txt")
 			);
 			return IOUtils.toString(bis);
 			
