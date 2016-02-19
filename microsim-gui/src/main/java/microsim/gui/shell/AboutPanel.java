@@ -87,7 +87,7 @@ BorderLayout borderLayout1 = new BorderLayout();
 //    int start = 160 + upperCorner;
     int start = 30 + upperCorner;
     leftCorner += 160;
-//    g.drawString("Version 3", leftCorner + 10, start + 10);
+    g.drawString("JAS-mine", leftCorner + 10, start + 10);
     
     SimpleDateFormat sdf = new SimpleDateFormat("yy");
     g.drawString("Copyright (C) 2014-" + sdf.format(new Date()) + " Ross E. Richardson", leftCorner + 10, start + 30);
