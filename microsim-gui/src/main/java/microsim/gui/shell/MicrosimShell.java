@@ -1065,7 +1065,7 @@ public class MicrosimShell extends JFrame {
 		if (jSilentCheck == null) {
 			jSilentCheck = new javax.swing.JCheckBox();
 			jSilentCheck.setSelected(controller.isSilent());
-			jSilentCheck.setText("Silent mode");
+			jSilentCheck.setText("Turn off database");
 			jSilentCheck
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
