@@ -777,11 +777,11 @@ public class MicrosimShell extends JFrame {
 						
 						if(!getters.contains(getterName)) {
 							if(!getters.contains("is" + capModelParameterName))		//handles case for boolean 'is' getter methods
-								throw new RuntimeException("Model parameter " + modelParameterName + " has no getter method.  Please create a getter method called " + getterName + " in the " + model.getClass() + " class to enable this model parameter to be controlled via the GUI.");
+								throw new RuntimeException("Model parameter " + modelParameterName + " has no getter method.  Please create a getter method called " + getterName + " in the " + model.getClass() + " to enable this model parameter to be controlled via the GUI.");
 						}
 						
-						else if(!setters.contains(setterName)) {
-							throw new RuntimeException("Model parameter " + modelParameterName + " has no setter method.  Please create a setter method called " + setterName + " in the " + model.getClass() + " class to enable this model parameter to be controlled via the GUI.");
+						if(!setters.contains(setterName)) {
+							throw new RuntimeException("Model parameter " + modelParameterName + " has no setter method.  Please create a setter method called " + setterName + " in the " + model.getClass() + " to enable this model parameter to be controlled via the GUI.");
 						}
 					}
 										
