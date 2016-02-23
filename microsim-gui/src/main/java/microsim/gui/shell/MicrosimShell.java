@@ -99,6 +99,8 @@ public class MicrosimShell extends JFrame {
 	private javax.swing.JButton jBtnStep = null;
 
 	private javax.swing.JButton jBtnPause = null;
+	
+	private javax.swing.JButton jBtnUpdateParams = null;
 
 	private javax.swing.JMenu jMenuSimulation = null;
 
@@ -288,6 +290,7 @@ public class MicrosimShell extends JFrame {
 			jToolBar.add(getJBtnStep());
 			//jToolBar.add(getJBtnTimeStep());
 			jToolBar.add(getJBtnPause());
+			jToolBar.add(getJBtnUpdateParameters());
 			jToolBar.addSeparator();
 			jToolBar.add(getJSilentCheck());
 			jToolBar.addSeparator();
@@ -364,6 +367,7 @@ public class MicrosimShell extends JFrame {
 		jMenuSimulationStop.setEnabled(false);
 		jMenuSimulationPause.setEnabled(false);
 		jBtnPause.setEnabled(false);
+		jBtnUpdateParams.setEnabled(false);
 		jBtnBuild.setEnabled(true);
 		jMenuSimulationBuild.setEnabled(true);
 		jMenuSimulationRestart.setEnabled(false);
@@ -384,6 +388,7 @@ public class MicrosimShell extends JFrame {
 		jBtnBuild.setEnabled(false);
 		jMenuSimulationPause.setEnabled(true);
 		jBtnPause.setEnabled(true);
+		jBtnUpdateParams.setEnabled(true);
 		jMenuSimulationBuild.setEnabled(false);
 		jMenuSimulationRestart.setEnabled(true);
 		jMenuSimulation.revalidate();
@@ -508,6 +513,10 @@ public class MicrosimShell extends JFrame {
 
 		public void pauseModel() {
 			callerEngine.pause();
+		}
+		
+		public void updateModelParams() {
+			callerEngine.updateParams();
 		}
 
 		public void stopModel() {
@@ -899,6 +908,26 @@ public class MicrosimShell extends JFrame {
 			});
 		}
 		return jBtnPause;
+	}
+	
+	/**
+	 * This method initializes jBtnPause
+	 * 
+	 * @return javax.swing.JButton
+	 */
+	private javax.swing.JButton getJBtnUpdateParameters() {
+		if (jBtnUpdateParams == null) {
+			jBtnUpdateParams = new javax.swing.JButton();
+			jBtnUpdateParams.setIcon(new javax.swing.ImageIcon(getClass().getResource(
+					"/microsim/gui/icons/simulation_update_params.png")));
+			jBtnUpdateParams.setToolTipText("Update parameters in the live simulation");
+			jBtnUpdateParams.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					controller.updateModelParams();
+				}
+			});
+		}
+		return jBtnUpdateParams;
 	}
 
 	/**
