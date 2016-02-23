@@ -54,7 +54,7 @@ public class ParameterFrame extends JInternalFrame {
 		//metawidget.setInspector(new ParameterInspector());
 		metawidget.setInspector( new CompositeInspector( inspectorConfig ) );
 		metawidget.setToInspect( target );	
-		setSize(250, 30 * fields.size());
+		setSize(250, Math.max(30 * fields.size(), 50));
 				
 		getContentPane().add(metawidget);
 		setVisible(true);
