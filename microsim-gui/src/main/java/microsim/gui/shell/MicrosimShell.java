@@ -115,6 +115,8 @@ public class MicrosimShell extends JFrame {
 	private javax.swing.JMenuItem jMenuSimulationStep = null;
 
 	private javax.swing.JMenuItem jMenuSimulationPause = null;
+	
+	private javax.swing.JMenuItem jMenuSimulationUpdateParams = null;
 
 	private javax.swing.JMenuItem jMenuSimulationStop = null;
 
@@ -366,6 +368,7 @@ public class MicrosimShell extends JFrame {
 		jMenuSimulationStep.setEnabled(false);
 		jMenuSimulationStop.setEnabled(false);
 		jMenuSimulationPause.setEnabled(false);
+		jMenuSimulationUpdateParams.setEnabled(false);
 		jBtnPause.setEnabled(false);
 		jBtnUpdateParams.setEnabled(false);
 		jBtnBuild.setEnabled(true);
@@ -387,6 +390,7 @@ public class MicrosimShell extends JFrame {
 		jMenuSimulationStop.setEnabled(true);
 		jBtnBuild.setEnabled(false);
 		jMenuSimulationPause.setEnabled(true);
+		jMenuSimulationUpdateParams.setEnabled(true);
 		jBtnPause.setEnabled(true);
 		jBtnUpdateParams.setEnabled(true);
 		jMenuSimulationBuild.setEnabled(false);
@@ -464,7 +468,7 @@ public class MicrosimShell extends JFrame {
 					JOptionPane
 							.showMessageDialog(
 									jasWindow,
-									"The JAS projects path does no more exist on this file system.\n "
+									"The JAS-mine projects path does no more exist on this file system.\n "
 											+ "Please check it from the Tool\\JAS Options menu");
 				else
 //					Sim.jasProjectsPath = settings.getProperty("ProjectsPath");
@@ -516,7 +520,9 @@ public class MicrosimShell extends JFrame {
 		}
 		
 		public void updateModelParams() {
-			callerEngine.updateParams();
+			for (ParameterFrame parameterFrame : parameterFrames) {
+				parameterFrame.save();
+			}			
 		}
 
 		public void stopModel() {
@@ -945,6 +951,7 @@ public class MicrosimShell extends JFrame {
 			jMenuSimulation.add(getJMenuSimulationStep());
 			//jMenuSimulation.add(getJMenuSimulationTimeStep());
 			jMenuSimulation.add(getJMenuSimulationPause());
+			jMenuSimulation.add(getJMenuSimulationUpdateParams());
 			jMenuSimulation.add(getJMenuSimulationStop());
 			jMenuSimulation.addSeparator();
 			jMenuSimulation.add(getJMenuSimulationEngine());
@@ -1102,6 +1109,27 @@ public class MicrosimShell extends JFrame {
 					});
 		}
 		return jMenuSimulationPause;
+	}
+	
+	/**
+	 * This method initializes jMenuSimulationPause
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private javax.swing.JMenuItem getJMenuSimulationUpdateParams() {
+		if (jMenuSimulationUpdateParams == null) {
+			jMenuSimulationUpdateParams = new javax.swing.JMenuItem();
+			jMenuSimulationUpdateParams.setText("Update Parameters");
+			jMenuSimulationUpdateParams.setIcon(new javax.swing.ImageIcon(getClass()
+					.getResource("/microsim/gui/icons/simulation_update_params.png")));
+			jMenuSimulationUpdateParams
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							controller.updateModelParams();
+						}
+					});
+		}
+		return jMenuSimulationUpdateParams;
 	}
 
 	/**
