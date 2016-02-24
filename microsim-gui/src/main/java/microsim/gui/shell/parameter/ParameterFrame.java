@@ -40,17 +40,17 @@ public class ParameterFrame extends JInternalFrame {
 	private void jbInit() throws Exception {
 		this.setResizable(true);
 		this.setTitle(target.getClass().getSimpleName() + "'s parameters");
-
+		
+		List<Field> fields = ParameterInspector.extractModelParameters(target.getClass());
+		
 		metawidget = new DescriptiveSwingMetawidget();
 		CompositeInspectorConfig inspectorConfig = new CompositeInspectorConfig().setInspectors(							
 				new ParameterInspector(),
-				new TooltipInspector() );
+				new TooltipInspector(fields) );
 		
-	
 		binder = new MetawidgetBinder();
 		metawidget.addWidgetProcessor(binder);	    			   
 			    	
-		List<Field> fields = ParameterInspector.extractModelParameters(target.getClass());
 		//metawidget.setInspector(new ParameterInspector());
 		metawidget.setInspector( new CompositeInspector( inspectorConfig ) );
 		metawidget.setToInspect( target );	
@@ -67,16 +67,33 @@ public class ParameterFrame extends JInternalFrame {
 	
 	public static class TooltipInspector
 		extends BaseObjectInspector {
+		
+		Map<String, String> modelParamDescriptions;
+		
+		TooltipInspector(List<Field> fields) {
+			
+			modelParamDescriptions = CollectionUtils.newHashMap();
+			for(Field f : fields) {
+				String description = f.getAnnotation(ModelParameter.class).description();
+				if(description != null) {
+					modelParamDescriptions.put(f.getName(), description);	
+				}
+			}
+		}
 
+//		@Override
 		protected Map<String, String> inspectProperty( Property property )
 			throws Exception {
 			
 			Map<String, String> attributes = CollectionUtils.newHashMap();
-
-			ModelParameter tooltip = property.getAnnotation( ModelParameter.class );
-
-			if ( tooltip != null )
-				attributes.put( "tooltip", tooltip.description() );
+			
+//			ModelParameter tooltip = property.getAnnotation( ModelParameter.class );	//Always returns null for some reason - property doesn't have the annotation information
+			
+			String description = modelParamDescriptions.get(property.getName());
+//			if ( tooltip != null ) {		//Always null as property doesn't contain annotation
+			if( description != null ) {
+				attributes.put( "tooltip", description );
+			}
 
 			return attributes;
 		}
