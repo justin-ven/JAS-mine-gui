@@ -108,7 +108,8 @@ public class TimeSeriesSimulationPlotter extends JInternalFrame implements Event
 
         // change the auto tick unit selection to integer units only...
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+//        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        rangeAxis.setStandardTickUnits(NumberAxis.createStandardTickUnits());		//Ross - made this change to allow units on Y axis for finer ticks, which is especially important for timeseries with values < 1.
 
         final ChartPanel chartPanel = new ChartPanel(chart);
                 
