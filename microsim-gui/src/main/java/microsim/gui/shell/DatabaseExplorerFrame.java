@@ -13,6 +13,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import microsim.data.db.DatabaseUtils;
 import microsim.engine.SimulationEngine;
@@ -85,7 +86,8 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 
 	private void initialize() {
 		// setIconImage(imageMiniPreferences.getImage());
-		this.setContentPane(getMainContentPane());
+		JScrollPane scrollPane = new JScrollPane(getMainContentPane());
+		this.setContentPane(scrollPane);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		setSize(new Dimension(450, 338));
