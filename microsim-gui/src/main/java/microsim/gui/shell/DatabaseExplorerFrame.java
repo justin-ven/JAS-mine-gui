@@ -91,7 +91,7 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		setSize(new Dimension(450, 338));
-		setTitle("H2 Database Explorer");
+		setTitle("Database Explorer");
 		this.setResizable(true);
 
 	}
