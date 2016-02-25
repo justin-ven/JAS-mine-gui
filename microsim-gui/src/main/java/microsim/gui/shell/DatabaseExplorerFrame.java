@@ -4,8 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystemException;
 import java.sql.SQLException;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -63,12 +66,15 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 			"/microsim/gui/icons/db.gif"));
 	
 	JButton jBtnClose = null;
+	JButton jBtnDelete = null;
 	JButton jBtnApply = null;
 	JButton jBtnInit = null;
 	JPanel jPanelProperties = null;
 	JPanel jPanelButtons = null;
 	
-	JList jList = null;
+	JList<String> jList = null;
+	File[] dirs = null;
+	DefaultListModel<String> model = new DefaultListModel<String>();
 	
 	private javax.swing.JPanel mainContentPane = null;
 
@@ -108,21 +114,25 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 		return jPanelProperties;
 	}
 
-	private JList getJList() {
+	private JList<String> getJList() {
 		if (jList == null) {
 			
 			File outputDir = new File("output");
-			File[] dirs = outputDir.listFiles();
+//			File[] dirs = outputDir.listFiles();
+			dirs = outputDir.listFiles();
 			if (dirs == null)
 				dirs = new File[0];
-			String[] outDirs = new String[dirs.length + 1];
-			outDirs[0] = "INPUT";
+//			String[] outDirs = new String[dirs.length + 1];
+//			outDirs[0] = "INPUT";
+			model.addElement("INPUT");
 			for (int i = 0; i < dirs.length; i++) {
 				File file = dirs[i];
-				outDirs[i + 1] = file.getName();
+//				outDirs[i + 1] = file.getName();
+				model.addElement(file.getName());
 			}
 			
-			jList = new JList(outDirs);			
+//			jList = new JList<String>(outDirs);			
+			jList = new JList<String>(model);
 		}
 		return jList;
 	}
@@ -139,6 +149,54 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	void jBtnDelete_actionPerformed(ActionEvent e) {
+		if (jList.getSelectedValue() == null)
+			return;
+		
+		try {
+			if (jList.getSelectedIndex() == 0) {		//Don't delete input database!
+				System.out.println("Only output databases can be deleted via the GUI!");
+				return;
+			}
+			else {
+				int indexToDelete = -1;
+				for(int i = 1; i < dirs.length; i++) {		//Cannot use jList.getSelectedIndex() to find dirs as index of dirs array is not updated after an element is deleted, unlike jList.
+//					System.out.println(dirs[i].getName() + ", jList selected value " + jList.getSelectedValue());
+					if(dirs[i].getName().equals(jList.getSelectedValue())) {
+						indexToDelete = i;
+						break;
+					}
+				}
+				if(deleteDirectory(dirs[indexToDelete].getAbsoluteFile())) {	//Note that dirs doesn't contain "INPUT" as first entry, unlike model.
+					model.removeElementAt(jList.getSelectedIndex());
+				} else {
+					throw new FileSystemException("Database cannot be deleted, check that the database is not open!");
+				}
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Force deletion of directory
+	 * @param path
+	 * @return boolean
+	 */
+	static private boolean deleteDirectory(File path) {
+	    if (path.exists()) {
+	        File[] files = path.listFiles();
+	        for (int i = 0; i < files.length; i++) {
+	            if (files[i].isDirectory()) {
+	                deleteDirectory(files[i]);
+	            } else {
+	                files[i].delete();
+	            }
+	        }
+	    }
+	    return (path.delete());
 	}
 
 	void jBtnClose_actionPerformed(ActionEvent e) {
@@ -160,7 +218,7 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 			mainContentPane = new javax.swing.JPanel();
 			mainContentPane.setLayout(new java.awt.BorderLayout());
 			mainContentPane.add(getJPanelProperties(), java.awt.BorderLayout.CENTER);
-			mainContentPane.add(getJPanelButtons(), java.awt.BorderLayout.SOUTH);
+			mainContentPane.add(getJPanelButtons(), java.awt.BorderLayout.NORTH);
 		}
 		return mainContentPane;
 	}
@@ -170,6 +228,7 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 			jPanelButtons = new javax.swing.JPanel();
 			jPanelButtons.add(getJBtnInit(), null);
 			jPanelButtons.add(getJBtnApply(), null);
+			jPanelButtons.add(getJBtnDelete(), null);
 			jPanelButtons.add(getJBtnClose(), null);
 		}
 		return jPanelButtons;
@@ -186,6 +245,19 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 			});
 		}
 		return jBtnClose;
+	}
+	
+	private javax.swing.JButton getJBtnDelete() {
+		if (jBtnDelete == null) {
+			jBtnDelete = new javax.swing.JButton();
+			jBtnDelete.setText("Delete database");
+			jBtnDelete.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					jBtnDelete_actionPerformed(e);
+				}
+			});
+		}
+		return jBtnDelete;
 	}
 
 	private javax.swing.JButton getJBtnApply() {
