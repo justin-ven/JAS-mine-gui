@@ -162,17 +162,17 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 			}
 			else {
 				int indexToDelete = -1;
-				for(int i = 1; i < dirs.length; i++) {		//Cannot use jList.getSelectedIndex() to find dirs as index of dirs array is not updated after an element is deleted, unlike jList.
+				for(int i = 0; i < dirs.length; i++) {		//Cannot use jList.getSelectedIndex() to find dirs as index of dirs array is not updated after an element is deleted, unlike jList.
 //					System.out.println(dirs[i].getName() + ", jList selected value " + jList.getSelectedValue());
 					if(dirs[i].getName().equals(jList.getSelectedValue())) {
 						indexToDelete = i;
 						break;
 					}
 				}
-				if(deleteDirectory(dirs[indexToDelete].getAbsoluteFile())) {	//Note that dirs doesn't contain "INPUT" as first entry, unlike model.
+				if((indexToDelete != -1) && deleteDirectory(dirs[indexToDelete].getAbsoluteFile())) {	//Note that dirs doesn't contain "INPUT" as first entry, unlike model.
 					model.removeElementAt(jList.getSelectedIndex());
 				} else {
-					throw new FileSystemException("Database cannot be deleted, check that the database is not open!");
+					throw new FileSystemException("Database cannot be deleted; check that the database is not in use!  Try again, after closing all connections to the database or restarting the GUI.");
 				}
 			}
 		} catch (IOException e1) {
