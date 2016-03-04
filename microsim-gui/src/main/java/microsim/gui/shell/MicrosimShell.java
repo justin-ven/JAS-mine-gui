@@ -20,8 +20,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
-import microsim.annotation.ModelParameter;
-import microsim.data.db.ExperimentParameter;
 import microsim.engine.EngineListener;
 import microsim.engine.SimulationEngine;
 import microsim.engine.SimulationManager;
