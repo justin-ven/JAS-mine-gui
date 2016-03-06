@@ -789,12 +789,19 @@ public class MicrosimShell extends JFrame {
 						String setterName = "set" + capModelParameterName;
 						
 						if(!getters.contains(getterName)) {
-							if(!getters.contains("is" + capModelParameterName))		//handles case for boolean 'is' getter methods
-								throw new RuntimeException("Model parameter " + modelParameterName + " has no getter method.  Please create a getter method called " + getterName + " in the " + model.getClass() + " to enable this model parameter to be controlled via the GUI.");
+							if(!getters.contains("is" + capModelParameterName))	{	//handles case for boolean 'is' getter methods
+								if(!getters.contains("get" + modelParameterName)) {		//handles cases for fields with a name whose first character is lower case, followed by a capital letter, e.g. nWorkers.  In this case, the Java Beans convention is for a getter called getnWorkers, instead of getNWorkers.
+									if(!getters.contains("is" + modelParameterName)) {		//handles case for boolean 'is' getter methods
+										throw new RuntimeException("Model parameter " + modelParameterName + " has no getter method.  Please create a getter method following the Java Beans convention in the " + model.getClass() + " to enable this model parameter to be controlled via the GUI.");
+									}
+								}
+							}
 						}
 						
 						if(!setters.contains(setterName)) {
-							throw new RuntimeException("Model parameter " + modelParameterName + " has no setter method.  Please create a setter method called " + setterName + " in the " + model.getClass() + " to enable this model parameter to be controlled via the GUI.");
+							if(!setters.contains("set" + modelParameterName)) {
+								throw new RuntimeException("Model parameter " + modelParameterName + " has no setter method.  Please create a setter method following the Java Beans convention in the " + model.getClass() + " to enable this model parameter to be controlled via the GUI.");
+							}
 						}
 					}
 										
