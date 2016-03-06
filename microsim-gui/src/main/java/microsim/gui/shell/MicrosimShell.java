@@ -834,7 +834,7 @@ public class MicrosimShell extends JFrame {
 	 * @return javax.swing.JButton
 	 */
 	private javax.swing.JButton getJBtnReload() {
-	if (jBtnReload == null) {
+		if (jBtnReload == null) {
 			jBtnReload = new javax.swing.JButton();
 			jBtnReload.setIcon(new javax.swing.ImageIcon(getClass()
 					.getResource("/microsim/gui/icons/simulation_refresh.gif")));
