@@ -32,7 +32,22 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<archive>
+					  <manifest>
+						<mainClass>Start</mainClass>
+					  </manifest>
+					</archive>
 				</configuration>
+				<executions>
+				  <execution>
+					<id>make-assembly</id>
+                                        <!-- bind to the packaging phase -->
+					<phase>package</phase> 
+					<goals>
+						<goal>single</goal>
+					</goals>
+				  </execution>
+				</executions>				
 			</plugin>
 		</plugins>
 		<extensions>
