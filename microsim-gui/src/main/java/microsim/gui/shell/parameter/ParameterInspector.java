@@ -5,10 +5,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import microsim.annotation.GUIparameter;
 import microsim.annotation.ModelParameter;
 
 import org.metawidget.inspector.iface.Inspector;
 
+@SuppressWarnings("deprecation")
 public class ParameterInspector implements Inspector {
 
 	//@Override
@@ -64,7 +66,7 @@ public class ParameterInspector implements Inspector {
 			field.setAccessible(true);
 			Annotation annos[] = field.getAnnotations();
 			for (Annotation anno : annos) {
-				if (anno.annotationType().equals(ModelParameter.class)) {
+				if((anno.annotationType().equals(GUIparameter.class)) || (anno.annotationType().equals(ModelParameter.class))) {
 					collectedFields.add(field);
 				}					
 			}

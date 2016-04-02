@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.swing.JInternalFrame;
 
+import microsim.annotation.GUIparameter;
 import microsim.annotation.ModelParameter;
 
 import org.metawidget.inspector.composite.CompositeInspector;
@@ -15,6 +16,7 @@ import org.metawidget.inspector.impl.propertystyle.Property;
 import org.metawidget.swing.SwingMetawidget;
 import org.metawidget.util.CollectionUtils;
 
+@SuppressWarnings("deprecation")
 public class ParameterFrame extends JInternalFrame {
 	
 	private static final long serialVersionUID = 1L;
@@ -68,15 +70,23 @@ public class ParameterFrame extends JInternalFrame {
 	public static class TooltipInspector
 		extends BaseObjectInspector {
 		
-		Map<String, String> modelParamDescriptions;
+		Map<String, String> guiParamDescriptions;
 		
 		TooltipInspector(List<Field> fields) {
 			
-			modelParamDescriptions = CollectionUtils.newHashMap();
+			guiParamDescriptions = CollectionUtils.newHashMap();
 			for(Field f : fields) {
-				String description = f.getAnnotation(ModelParameter.class).description();
-				if(description != null) {
-					modelParamDescriptions.put(f.getName(), description);	
+				String description = null;
+				try {
+					description = f.getAnnotation(GUIparameter.class).description();
+					if(description == null)
+						description = f.getAnnotation(ModelParameter.class).description();	//Old deprecated version
+					if(description != null) {
+						guiParamDescriptions.put(f.getName(), description);	
+					}	
+				}
+				catch (NullPointerException e) {
+					//Do nothing
 				}
 			}
 		}
@@ -89,7 +99,7 @@ public class ParameterFrame extends JInternalFrame {
 			
 //			ModelParameter tooltip = property.getAnnotation( ModelParameter.class );	//Always returns null for some reason - property doesn't have the annotation information
 			
-			String description = modelParamDescriptions.get(property.getName());
+			String description = guiParamDescriptions.get(property.getName());
 //			if ( tooltip != null ) {		//Always null as property doesn't contain annotation
 			if( description != null ) {
 				attributes.put( "tooltip", description );
