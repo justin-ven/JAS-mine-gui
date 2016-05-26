@@ -1,6 +1,7 @@
 package microsim.gui.plot;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.JInternalFrame;
@@ -8,6 +9,7 @@ import javax.swing.JInternalFrame;
 import microsim.engine.SimulationEngine;
 import microsim.event.CommonEventType;
 import microsim.event.EventListener;
+import microsim.gui.shell.MicrosimShell;
 import microsim.reflection.ReflectionUtils;
 import microsim.statistics.IDoubleSource;
 import microsim.statistics.IFloatSource;
@@ -94,6 +96,11 @@ public class TimeSeriesSimulationPlotter extends JInternalFrame implements Event
 
         // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
         chart.setBackgroundPaint(Color.white);
+        
+        String fontName = chart.getLegend().getItemFont().getFontName();
+        int style = chart.getLegend().getItemFont().getStyle();
+        int size = chart.getLegend().getItemFont().getSize();
+        chart.getLegend().setItemFont(new Font(fontName, style, (int)MicrosimShell.scale*size));
         
         // get a reference to the plot for further customisation...
         final XYPlot plot = chart.getXYPlot();

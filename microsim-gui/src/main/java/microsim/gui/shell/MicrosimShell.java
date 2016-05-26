@@ -2,6 +2,7 @@ package microsim.gui.shell;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
@@ -66,11 +67,13 @@ public class MicrosimShell extends JFrame {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public static final double scale = 1.0;
 
 	private static String settingsFileName = "jas.ini";
 
 	/** The frame title. */
-	public static String frameTitle = "JAS";
+	public static String frameTitle = "JAS-mine";
 
 	private final SimulationController controller = new SimulationController(this);
 
@@ -309,6 +312,7 @@ public class MicrosimShell extends JFrame {
 	private javax.swing.JLabel getJLabelTime() {
 		if (jLabelTime == null) {
 			jLabelTime = new javax.swing.JLabel();
+			jLabelTime.setFont(new Font(jLabelTime.getFont().getFontName(), jLabelTime.getFont().getStyle(), (int)MicrosimShell.scale*jLabelTime.getFont().getSize()));
 		}
 		return jLabelTime;
 	}
@@ -967,6 +971,7 @@ public class MicrosimShell extends JFrame {
 			jMenuSimulation.addSeparator();
 			jMenuSimulation.add(getJMenuSimulationEngine());
 			jMenuSimulation.setText("Simulation");
+			jMenuSimulation.setFont(new Font(jMenuSimulation.getFont().getFontName(), jMenuSimulation.getFont().getStyle(), (int)scale*jMenuSimulation.getFont().getSize()));
 			//jMenuSimulation.addSeparator();
 			jMenuSimulation.add(getJMenuFileExit());
 		}
@@ -1000,6 +1005,7 @@ public class MicrosimShell extends JFrame {
 		if (jMenuTools == null) {
 			jMenuTools = new javax.swing.JMenu();
 			jMenuTools.setText("Tools");
+			jMenuTools.setFont(new Font(jMenuTools.getFont().getFontName(), jMenuTools.getFont().getStyle(), (int)scale*jMenuTools.getFont().getSize()));
 			//jMenuTools.add(getJMenuToolsParameter());
 			//jMenuTools.add(getJMenuToolsGraph());
 			//jMenuTools.add(getJMenuToolsDB());
@@ -1029,6 +1035,7 @@ public class MicrosimShell extends JFrame {
 			//jMenuHelp.addSeparator();
 			jMenuHelp.add(getJMenuHelpAbout());
 			jMenuHelp.setText("Help");
+			jMenuHelp.setFont(new Font(jMenuHelp.getFont().getFontName(), jMenuHelp.getFont().getStyle(), (int)scale*jMenuHelp.getFont().getSize()));
 		}
 		return jMenuHelp;
 	}
@@ -1185,6 +1192,7 @@ public class MicrosimShell extends JFrame {
 			jSilentCheck = new javax.swing.JCheckBox();
 			jSilentCheck.setSelected(controller.isSilent());
 			jSilentCheck.setText("Turn off database");
+			jSilentCheck.setFont(new Font(jSilentCheck.getFont().getFontName(), jSilentCheck.getFont().getStyle(), (int)scale*jSilentCheck.getFont().getSize()));
 			jSilentCheck
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -1259,7 +1267,7 @@ public class MicrosimShell extends JFrame {
 			jLabelCurTime = new javax.swing.JLabel();
 			jLabelCurTime.setText("Current time:");
 			jLabelCurTime.setFont(new java.awt.Font("Franklin Gothic Medium",
-					java.awt.Font.ITALIC, 12));
+					java.awt.Font.ITALIC, (int)scale*12));
 		}
 		return jLabelCurTime;
 	}
@@ -1290,10 +1298,10 @@ public class MicrosimShell extends JFrame {
 	private javax.swing.JLabel getJLabelSlider() {
 		if (jLabelSlider == null) {
 			jLabelSlider = new javax.swing.JLabel();
-			jLabelSlider.setBounds(0, 0, 173, 18);
+			jLabelSlider.setBounds(0, 0, (int)scale*173, 18);
 			jLabelSlider.setText(" Simulation speed: max");
 			jLabelSlider.setFont(new java.awt.Font("Franklin Gothic Medium",
-					java.awt.Font.PLAIN, 12));
+					java.awt.Font.PLAIN, (int)scale*12));
 			jLabelSlider.setName("jLabelSlider");
 		}
 		return jLabelSlider;
@@ -1307,7 +1315,7 @@ public class MicrosimShell extends JFrame {
 	private javax.swing.JSlider getJSlider() {
 		if (jSlider == null) {
 			jSlider = new javax.swing.JSlider();
-			jSlider.setBounds(0, 18, 173, 18);
+			jSlider.setBounds(0, 18, (int)scale*173, 18);
 			jSlider.setName("jSlider");
 			jSlider.setMaximum(200);
 			jSlider.setValue(0);
