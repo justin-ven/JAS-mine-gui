@@ -126,7 +126,7 @@ public class EngineParametersFrame extends JInternalFrame implements EngineListe
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		setSize(new Dimension(450, 338));
-		setTitle("JAS engine current status");
+		setTitle("JAS-mine engine current status");
 		this.setResizable(true);
 
 	}

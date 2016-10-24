@@ -197,9 +197,9 @@ public class MicrosimShell extends JFrame {
 		this.setSize(727, 426);		//Was left commented out by Michele, but I (Ross) think it's better to have this to allow the user to immediately see the parameter boxes at the top half of the shell. 
 		this.setContentPane(getJContentPane());
 		this.setJMenuBar(getJJMenuBar());
-		this.setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage(				
-				getClass().getResource("/microsim/gui/icons/msIco.gif")));
-		this.setTitle("Microsim");
+		this.setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage(	
+				getClass().getResource("/microsim/gui/icons/logo_2.png")));
+		this.setTitle("JAS-mine");
 
 		this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
