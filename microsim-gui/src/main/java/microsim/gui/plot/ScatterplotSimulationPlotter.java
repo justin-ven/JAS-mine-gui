@@ -32,9 +32,9 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 /**
- * A scatterplot plotter is able to trace one or more pairs of data sources over time. It
- * is based on JFreeChart library and uses data sources based on the
- * microsim.statistics.* interfaces.<br>
+ * A ScatterplotSimulationPlotter is able to trace one or more pairs of data sources 
+ * over time, creating a scatterplot chart. It is based on JFreeChart library and
+ *  uses data sources based on the microsim.statistics.* interfaces.<br>
  * 
  * 
  * <p>
@@ -523,8 +523,8 @@ public class ScatterplotSimulationPlotter extends JInternalFrame implements Even
 	
 	
 	/**
-	 * Build a series of paired values, retrieving x-axis data an IDoubleSource objects and y-axis data 
-	 * from an ILongSource, using the default variableId.
+	 * Build a series of paired values, retrieving x-axis data from an IDoubleSource object and y-axis data 
+	 * from an ILongSource object, using the default variableId.
 	 * 
 	 * @param legend
 	 *            The legend name of the series.
@@ -545,8 +545,8 @@ public class ScatterplotSimulationPlotter extends JInternalFrame implements Even
 	}
 
 	/**
-	 * Build a series of paired values, retrieving x-axis data an IDoubleSource objects and y-axis data 
-	 * from an ILongSource
+	 * Build a series of paired values, retrieving x-axis data from an IDoubleSource object and y-axis data 
+	 * from an ILongSource object.
 	 * 
 	 * @param legend
 	 *            The legend name of the series.
@@ -572,8 +572,8 @@ public class ScatterplotSimulationPlotter extends JInternalFrame implements Even
 	}
 
 	/**
-	 * Build a series of paired values, retrieving x-axis data an ILongSource objects and y-axis data 
-	 * from an IDoubleSource, using the default variableId.
+	 * Build a series of paired values, retrieving x-axis data from an ILongSource object and 
+	 * y-axis data from an IDoubleSource object, using the default variableId.
 	 * 
 	 * @param legend
 	 *            The legend name of the series.
@@ -594,8 +594,8 @@ public class ScatterplotSimulationPlotter extends JInternalFrame implements Even
 	}
 
 	/**
-	 * Build a series of paired values, retrieving x-axis data an ILongSource objects and y-axis data 
-	 * from an IDoubleSource.
+	 * Build a series of paired values, retrieving x-axis data from an ILongSource object and 
+	 * y-axis data from an IDoubleSource object.
 	 * 
 	 * @param legend
 	 *            The legend name of the series.
