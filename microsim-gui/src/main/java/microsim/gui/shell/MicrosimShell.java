@@ -295,8 +295,8 @@ public class MicrosimShell extends JFrame {
 			jToolBar.add(getJBtnPause());
 			jToolBar.add(getJBtnUpdateParameters());
 			jToolBar.addSeparator();
-			jToolBar.add(getJSilentCheck());
-			jToolBar.addSeparator();
+//			jToolBar.add(getJSilentCheck());	//Ross: This has been removed in order to avoid misuse by inexperienced users, who might try to import/export to the database despite switching the connection off.  Now all JAS-mine models launched from the GUI will automatically have the database connection created.  If the user wants to turn this connection off, they can do so programmatically by setting turnOffDatabaseConnection to true in the Start class template of the simulation project created by the JAS-mine plugin for Eclipse IDE.
+//			jToolBar.addSeparator();
 			jToolBar.addSeparator(new Dimension(50, 30));
 			jToolBar.add(getJPanelSlider());
 			jToolBar.setPreferredSize(new java.awt.Dimension(414, 40));
@@ -491,12 +491,12 @@ public class MicrosimShell extends JFrame {
 			callerEngine.setRunningStatus(st);
 		}
 
-		public void setSilent(boolean silentMode) {
-			callerEngine.setSilentMode(silentMode);
+		public void setTurnOffDatabaseConnection(boolean turnOffDatabaseConnection) {
+			callerEngine.setTurnOffDatabaseConnection(turnOffDatabaseConnection);
 		}
 		
-		public boolean isSilent() {
-			return callerEngine.isSilentMode();
+		public boolean isTurnOffDatabaseConnection() {
+			return callerEngine.isTurnOffDatabaseConnection();
 		}
 		
 		public void showDatabaseExplorer() {
@@ -1205,14 +1205,14 @@ public class MicrosimShell extends JFrame {
 	private javax.swing.JCheckBox getJSilentCheck() {
 		if (jSilentCheck == null) {
 			jSilentCheck = new javax.swing.JCheckBox();
-			jSilentCheck.setSelected(controller.isSilent());
+			jSilentCheck.setSelected(controller.isTurnOffDatabaseConnection());
 			jSilentCheck.setText("Turn off database");
 			jSilentCheck.setFont(new Font(jSilentCheck.getFont().getFontName(), jSilentCheck.getFont().getStyle(), (int)scale*jSilentCheck.getFont().getSize()));
 			jSilentCheck
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							controller.setSilent(jSilentCheck.isSelected());
-							jSilentCheck.setSelected(controller.isSilent());
+							controller.setTurnOffDatabaseConnection(jSilentCheck.isSelected());
+							jSilentCheck.setSelected(controller.isTurnOffDatabaseConnection());
 						}
 					});
 		}
