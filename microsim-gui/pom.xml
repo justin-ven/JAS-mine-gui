@@ -6,7 +6,7 @@
 	</properties>	
 	<groupId>com.github.jasmineRepo</groupId>
 	<artifactId>JAS-mine-gui</artifactId>
-	<version>3.2.1</version>
+	<version>3.2.1.1</version>
 	<build>
 		<plugins>
 			<plugin>
@@ -116,6 +116,12 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jdesktop/beansbinding -->
+		<dependency>
+		    <groupId>org.jdesktop</groupId>
+		    <artifactId>beansbinding</artifactId>
+		    <version>1.2.1</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.github.jasmineRepo</groupId>

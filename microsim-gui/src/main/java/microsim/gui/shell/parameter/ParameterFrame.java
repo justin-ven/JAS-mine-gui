@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JInternalFrame;
-
 import microsim.annotation.GUIparameter;
 import microsim.annotation.ModelParameter;
 
@@ -14,6 +13,8 @@ import org.metawidget.inspector.composite.CompositeInspectorConfig;
 import org.metawidget.inspector.impl.BaseObjectInspector;
 import org.metawidget.inspector.impl.propertystyle.Property;
 import org.metawidget.swing.SwingMetawidget;
+import org.metawidget.swing.widgetprocessor.binding.beansbinding.BeansBindingProcessor;
+import org.metawidget.swing.widgetprocessor.binding.beansbinding.BeansBindingProcessorConfig;
 import org.metawidget.util.CollectionUtils;
 
 @SuppressWarnings("deprecation")
@@ -51,9 +52,14 @@ public class ParameterFrame extends JInternalFrame {
 				new TooltipInspector(fields) );
 		
 		binder = new MetawidgetBinder();
-		metawidget.addWidgetProcessor(binder);	    			   
-			    	
-		//metawidget.setInspector(new ParameterInspector());
+		metawidget.addWidgetProcessor(binder);
+		
+//		//The following code allows automatic synchronization between the GUI parameters and the model.  If you want the user to have to click on 'Update Parameters' button, comment this out.
+//	    metawidget.addWidgetProcessor( 
+//	        new BeansBindingProcessor(
+//	            new BeansBindingProcessorConfig().setUpdateStrategy(
+//	            		org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE )) );
+	    			       	
 		metawidget.setInspector( new CompositeInspector( inspectorConfig ) );
 		metawidget.setToInspect( target );	
 		setSize(250, Math.max(30 * fields.size(), 50));
