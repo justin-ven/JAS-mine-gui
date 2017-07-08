@@ -71,7 +71,7 @@ public class ScatterplotSimulationPlotter extends JInternalFrame implements Even
 	
 	private XYSeriesCollection dataset;
 	
-	private int maxSamples = 0;
+	private int maxSamples;
 
 	
 	/**
@@ -107,7 +107,7 @@ public class ScatterplotSimulationPlotter extends JInternalFrame implements Even
 	 * 	accumulate all data points from the simulation run, i.e. to display all 
 	 * 	available data from all previous time-steps, set this to 0.
 	 */
-	public ScatterplotSimulationPlotter(String title, String xaxis, String yaxis, boolean includeLegend, int maxSamples) {		//Can specify whether to include legend
+	public ScatterplotSimulationPlotter(String title, String xaxis, String yaxis, boolean includeLegend, int maxSamples) {		//Can specify whether to include legend and how many samples (updates) to display
 		super();
 		this.setResizable(true);
 		this.setTitle(title);
@@ -158,19 +158,23 @@ public class ScatterplotSimulationPlotter extends JInternalFrame implements Even
 
 	public void onEvent(Enum<?> type) {
 		if (type instanceof CommonEventType && type.equals(CommonEventType.Update)) {
-			double x = 0.0, y = 0.0;
-			for (int i = 0; i < sources.size(); i++) {
-				Source source_X = sources.get(i).getFirst();
-				Source source_Y = sources.get(i).getSecond();
-				XYSeries series = dataset.getSeries(i);
-				x = source_X.getDouble();
-				y = source_Y.getDouble();
-				series.add(x, y);
-//				if (maxSamples > 0 && series.getItemCount() > maxSamples ) {		//Should no longer be necessary if using XYSeries.setMaximumItemCount()
-//					XYDataItem xy = series.remove(0);
-//					System.out.println(series.getItemCount() + ", (" + xy.getXValue() + ", " + xy.getYValue() + ")");					
-//				}
-			}
+			update();
+		}
+	}
+	
+	public void update() {
+		double x = 0.0, y = 0.0;
+		for (int i = 0; i < sources.size(); i++) {
+			Source source_X = sources.get(i).getFirst();
+			Source source_Y = sources.get(i).getSecond();
+			XYSeries series = dataset.getSeries(i);
+			x = source_X.getDouble();
+			y = source_Y.getDouble();
+			series.add(x, y);
+//			if (maxSamples > 0 && series.getItemCount() > maxSamples ) {		//Should no longer be necessary if using XYSeries.setMaximumItemCount()
+//				XYDataItem xy = series.remove(0);
+//				System.out.println(series.getItemCount() + ", (" + xy.getXValue() + ", " + xy.getYValue() + ")");					
+//			}
 		}
 	}
 
