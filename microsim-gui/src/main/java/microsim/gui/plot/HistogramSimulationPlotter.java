@@ -20,6 +20,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.general.SeriesChangeEvent;
 import org.jfree.data.statistics.HistogramDataset;
@@ -69,8 +70,6 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 	private HistogramDataset dataset;
 	
 	private HistogramType type;
-		
-//	private int maxSamples;
 	
 	private int bins;
 
@@ -118,7 +117,7 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 	 * 	accumulate all data points from the simulation run, i.e. to display all 
 	 * 	available data from all previous time-steps, set this to 0.
 	 */
-	public HistogramSimulationPlotter(String title, String xaxis, HistogramType type, int bins, Double minimum, Double maximum, boolean includeLegend /*, int maxSamples*/) {		//Can specify whether to include legend and how many samples (updates) to display
+	public HistogramSimulationPlotter(String title, String xaxis, HistogramType type, int bins, Double minimum, Double maximum, boolean includeLegend) {		//Can specify whether to include legend and how many samples (updates) to display
 		super();
 		this.setResizable(true);
 		this.setTitle(title);
@@ -126,7 +125,6 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 		this.bins = bins;
 		this.minimum = minimum;
 		this.maximum = maximum;
-//		this.maxSamples = maxSamples;
 		
 		sources = new ArrayList<ArraySource>();
 		
@@ -161,12 +159,16 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
         
         // get a reference to the plot for further customisation...
         final XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(Color.lightGray);
+//        plot.setBackgroundPaint(Color.lightGray);
+        plot.setBackgroundPaint(Color.white);
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
-
+        plot.setForegroundAlpha(0.85f);
+        
 		final XYBarRenderer renderer = new XYBarRenderer();
 		renderer.setDrawBarOutline(false);
+        renderer.setBarPainter(new StandardXYBarPainter());
+        renderer.setShadowVisible(false);
         plot.setRenderer(renderer);     
         
         final NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
@@ -195,6 +197,14 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 		dataset = new HistogramDataset();
 		dataset.setType(type);
 		chart.getXYPlot().setDataset(dataset);
+		
+//		int s = 0;
+//		Color color = (Color) chart.getXYPlot().getRenderer().getItemPaint(s, 0);
+//		int r = color.getRed();
+//		int g = color.getGreen();
+//		int b = color.getBlue();
+//		chart.getXYPlot().getRenderer().setSeriesPaint(s, new Color(r, g, b, 130));
+		
 		for (int i = 0; i < sources.size(); i++) {
 			ArraySource cs = (ArraySource) sources.get(i);
 			double[] vals = cs.getDoubleArray();
@@ -203,6 +213,8 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 				dataset.addSeries(cs.label, vals, bins, minimum, maximum);
 			}
 			else dataset.addSeries(cs.label, vals, bins);
+			
+			
 		}
 		dataset.seriesChanged(new SeriesChangeEvent(new String("Update at time " + SimulationEngine.getInstance().getTime())));
 
@@ -382,12 +394,4 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 		sources.add(sequence);
 	}
 
-//	public int getMaxSamples() {
-//		return maxSamples;
-//	}
-//
-//	public void setMaxSamples(int maxSamples) {
-//		this.maxSamples = maxSamples;
-//	}	
-		
 }
