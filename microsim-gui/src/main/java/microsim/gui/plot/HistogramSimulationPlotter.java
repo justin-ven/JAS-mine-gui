@@ -74,13 +74,17 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 	
 	private int bins;
 
+	private Double minimum;
+	
+	private Double maximum;
 	
 	/**
 	 * Constructor for histogram chart objects with chart legend displayed by default and
 	 * 	all data samples shown, showing only the latest population data as time moves forward.
-	 *  If it is desired to turn the legend off, or display more than just the most recent
-	 *  data samples (e.g. time-steps) in the chart, use the constructor 
-	 *  HistogramSimulationPlotter(String title, String xaxis, String yaxis, boolean includeLegend, int maxSamples)
+	 *  Note - values falling on the boundary of adjacent bins will be assigned to the higher 
+	 *  indexed bin.  If it is desired set the minimum and maximum values displayed, or to turn 
+	 *  the legend off, use the constructor:  
+	 *  HistogramSimulationPlotter(String title, String xaxis, HistogramType type, int bins, double minimum, double maximum, boolean includeLegend)
 	 *  
 	 * @param title - title of the chart
 	 * @param xaxis - name of the x-axis
@@ -89,17 +93,21 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 	 * 
 	 */
 	public HistogramSimulationPlotter(String title, String xaxis, HistogramType type, int bins) {		//Includes legend by default and will accumulate data samples by default (if wanting only the most recent data points, use the other constructor)
-		this(title, xaxis, type, bins, true);
+		this(title, xaxis, type, bins, null, null, true);
 	}
 
 	/**
 	 * Constructor for scatterplot chart objects, featuring a toggle to hide the chart legend
-	 * 	and to set the number of previous updates (e.g. time-steps) of data to display in the chart.
+	 * 	and to set the minimum and maximum values displayed in the chart, with values below the minimum
+	 *  assigned to the first bin, and values above the maximum assigned to the last bin.  Note - 
+	 *  values falling on the boundary of adjacent bins will be assigned to the higher indexed bin.
 	 * 
 	 * @param title - title of the chart
 	 * @param xaxis - name of the x-axis
 	 * @param type - the type of the histogram: either FREQUENCY, RELATIVE_FREQUENCY, or SCALE_AREA_TO_1
 	 * @param bins - the number of bins in the histogram
+	 * @param minimum - any data value less than minimum will be assigned to the first bin
+	 * @param maximum - any data value greater than maximum will be assigned to the last bin
 	 * @param includeLegend - toggles whether to include the legend.  If displaying a 
 	 * 	very large number of different series in the chart, it may be useful to turn 
 	 * 	the legend off as it will occupy a lot of space in the GUI.
@@ -110,12 +118,14 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 	 * 	accumulate all data points from the simulation run, i.e. to display all 
 	 * 	available data from all previous time-steps, set this to 0.
 	 */
-	public HistogramSimulationPlotter(String title, String xaxis, HistogramType type, int bins, boolean includeLegend /*, int maxSamples*/) {		//Can specify whether to include legend and how many samples (updates) to display
+	public HistogramSimulationPlotter(String title, String xaxis, HistogramType type, int bins, Double minimum, Double maximum, boolean includeLegend /*, int maxSamples*/) {		//Can specify whether to include legend and how many samples (updates) to display
 		super();
 		this.setResizable(true);
 		this.setTitle(title);
 		this.type = type;
 		this.bins = bins;
+		this.minimum = minimum;
+		this.maximum = maximum;
 //		this.maxSamples = maxSamples;
 		
 		sources = new ArrayList<ArraySource>();
@@ -188,7 +198,11 @@ public class HistogramSimulationPlotter extends JInternalFrame implements EventL
 		for (int i = 0; i < sources.size(); i++) {
 			ArraySource cs = (ArraySource) sources.get(i);
 			double[] vals = cs.getDoubleArray();
-			dataset.addSeries(cs.label, vals, bins);
+			
+			if(minimum != null && maximum != null) { 
+				dataset.addSeries(cs.label, vals, bins, minimum, maximum);
+			}
+			else dataset.addSeries(cs.label, vals, bins);
 		}
 		dataset.seriesChanged(new SeriesChangeEvent(new String("Update at time " + SimulationEngine.getInstance().getTime())));
 
