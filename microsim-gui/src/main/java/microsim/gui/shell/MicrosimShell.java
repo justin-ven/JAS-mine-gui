@@ -766,7 +766,7 @@ public class MicrosimShell extends JFrame {
 
 		public void onEngineEvent(SystemEventType event) {
 			if (event.equals(SystemEventType.Step))
-				getJLabelTime().setText("" + callerEngine.getEventList().getTime());	
+				getJLabelTime().setText("" + callerEngine.getEventQueue().getTime());	
 			else if (event.equals(SystemEventType.Setup)) {
 				parameterFrames.clear();
 				for (SimulationManager model : controller.callerEngine.getModelArray()) {

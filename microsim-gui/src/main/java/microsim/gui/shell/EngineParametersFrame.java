@@ -281,7 +281,7 @@ public class EngineParametersFrame extends JInternalFrame implements EngineListe
 
 	private void updateEventList() {
 		currentEngine.pause();
-		Event[] eventArray = currentEngine.getEventList().getEventArray();
+		Event[] eventArray = currentEngine.getEventQueue().getEventArray();
 
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 
