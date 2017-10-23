@@ -1,12 +1,15 @@
 package microsim.gui.plot;
 
 import java.awt.Color;
+import java.awt.Paint;
 import java.util.ArrayList;
 
 import javax.swing.JInternalFrame;
 
 import microsim.event.CommonEventType;
 import microsim.event.EventListener;
+import microsim.gui.colormap.ColorMap;
+import microsim.gui.colormap.FixedColorMap;
 import microsim.reflection.ReflectionUtils;
 import microsim.statistics.IDoubleSource;
 import microsim.statistics.IFloatSource;
@@ -73,11 +76,14 @@ public class IndividualBarSimulationPlotter extends JInternalFrame implements Ev
 	
 	private String yaxis;
 	
+	private FixedColorMap colorMap;
+	
 	public IndividualBarSimulationPlotter(String title, String yaxis) {
 		super();
 		this.setResizable(true);
 		this.setTitle(title);
 		this.yaxis = yaxis;
+		colorMap = new FixedColorMap();
 		
 		sources = new ArrayList<Source>();
 		categories = new ArrayList<String>();
@@ -111,7 +117,9 @@ public class IndividualBarSimulationPlotter extends JInternalFrame implements Ev
         rangeAxis.setStandardTickUnits(NumberAxis.createStandardTickUnits());
 
         // disable bar outlines...
-        renderer = (BarRenderer) plot.getRenderer();
+//        renderer = (BarRenderer) plot.getRenderer();
+        renderer = new ColoredBarRenderer(colorMap); 
+        plot.setRenderer(renderer);
         renderer.setDrawBarOutline(false);
 
         final CategoryAxis domainAxis = plot.getDomainAxis();
@@ -258,111 +266,7 @@ public class IndividualBarSimulationPlotter extends JInternalFrame implements Ev
         categories.add(legend);
 	}
 
-	/**
-	 * Build a series retrieving data from a IDoubleSource object.
-	 * 
-	 * @param legend
-	 *            The legend name of the series.
-	 * @param plottableObject
-	 *            The data source object implementing the IDoubleSource
-	 *            interface.
-	 * @param variableID
-	 *            The variable id of the source object.
-	 */
-	public void addSources(String legend, IDoubleSource plottableObject,
-			Enum<?> variableID) {
-		sources.add(new DSource(legend, plottableObject, variableID));        
-        categories.add(legend);
-	}
 
-	/**
-	 * Build a series from a IFloatSource object, using the default variableId.
-	 * 
-	 * @param legend
-	 *            The legend name of the series.
-	 * @param plottableObject
-	 *            The data source object implementing the IFloatSource
-	 *            interface.
-	 */
-	public void addSources(String legend, IFloatSource plottableObject) {
-		sources.add(new FSource(legend, plottableObject, IFloatSource.Variables.Default));
-        categories.add(legend);
-	}
-
-	/**
-	 * Build a series from a IFloatSource object.
-	 * 
-	 * @param legend
-	 *            The legend name of the series.
-	 * @param plottableObject
-	 *            The data source object implementing the IFloatSource
-	 *            interface.
-	 * @param variableID
-	 *            The variable id of the source object.
-	 */
-	public void addSources(String legend, IFloatSource plottableObject,
-			Enum<?> variableID) {
-		sources.add(new FSource(legend, plottableObject, variableID));       
-        categories.add(legend);
-	}
-
-	/**
-	 * Build a series from a ILongSource object, using the default variableId.
-	 * 
-	 * @param legend
-	 *            The legend name of the series.
-	 * @param plottableObject
-	 *            The data source object implementing the ILongSource interface.
-	 */
-	public void addSources(String legend, ILongSource plottableObject) {
-		sources.add(new LSource(legend, plottableObject, ILongSource.Variables.Default));       
-        categories.add(legend);
-	}
-
-	/**
-	 * Build a series from a ILongSource object.
-	 * 
-	 * @param legend
-	 *            The legend name of the series.
-	 * @param plottableObject
-	 *            The data source object implementing the IDblSource interface.
-	 * @param variableID
-	 *            The variable id of the source object.
-	 */
-	public void addSources(String legend, ILongSource plottableObject,
-			Enum<?> variableID) {
-		sources.add(new LSource(legend, plottableObject, variableID));        
-        categories.add(legend);
-	}
-
-	/**
-	 * Build a series from a IIntSource object, using the default variableId.
-	 * 
-	 * @param legend
-	 *            The legend name of the series.
-	 * @param plottableObject
-	 *            The data source object implementing the IIntSource interface.
-	 */
-	public void addSources(String legend, IIntSource plottableObject) {
-		sources.add(new ISource(legend, plottableObject, IIntSource.Variables.Default));        
-        categories.add(legend);
-	}
-
-	/**
-	 * Build a series from a IIntSource object.
-	 * 
-	 * @param legend
-	 *            The legend name of the series.
-	 * @param plottableObject
-	 *            The data source object implementing the IIntSource interface.
-	 * @param variableID
-	 *            The variable id of the source object.
-	 */
-	public void addSources(String legend, IIntSource plottableObject,
-			Enum<?> variableID) {
-		sources.add(new ISource(legend, plottableObject, variableID));        
-        categories.add(legend);
-	}
 
 	/**
 	 * Build a series from a generic object.
@@ -399,8 +303,205 @@ public class IndividualBarSimulationPlotter extends JInternalFrame implements Ev
 			throw new IllegalArgumentException("The target object " + target
 					+ " does not provide a value of a valid data type.");
 
-		sources.add(source);        
-        categories.add(legend);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	// Methods to specify colour of each bar (source)
+	//
+	//--------------------------------------------------------------------------
+	
+	
+	/**
+	 * Build a series retrieving data from a IDoubleSource object, using the
+	 * default variableId and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param plottableObject
+	 *            The data source object implementing the IDoubleSource
+	 *            interface.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, IDoubleSource plottableObject, Color color) {
+		addSources(legend, plottableObject);
+		int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);
+	}
+	
+	
+	/**
+	 * Build a series retrieving data from a IDoubleSource object and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param plottableObject
+	 *            The data source object implementing the IDoubleSource
+	 *            interface.
+	 * @param variableID
+	 *            The variable id of the source object.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, IDoubleSource plottableObject,
+			Enum<?> variableID, Color color) {
+		sources.add(new DSource(legend, plottableObject, variableID));        
+        categories.add(legend);
+        int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);
+	}
+
+	/**
+	 * Build a series from a IFloatSource object, using the default variableId and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param plottableObject
+	 *            The data source object implementing the IFloatSource
+	 *            interface.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, IFloatSource plottableObject, Color color) {
+		sources.add(new FSource(legend, plottableObject, IFloatSource.Variables.Default));
+        categories.add(legend);
+        int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);
+	}
+
+	/**
+	 * Build a series from a IFloatSource object and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param plottableObject
+	 *            The data source object implementing the IFloatSource
+	 *            interface.
+	 * @param variableID
+	 *            The variable id of the source object.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, IFloatSource plottableObject,
+			Enum<?> variableID, Color color) {
+		sources.add(new FSource(legend, plottableObject, variableID));       
+        categories.add(legend);
+        int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);
+	}
+
+	/**
+	 * Build a series from a ILongSource object, using the default variableId and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param plottableObject
+	 *            The data source object implementing the ILongSource interface.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, ILongSource plottableObject, Color color) {
+		sources.add(new LSource(legend, plottableObject, ILongSource.Variables.Default));       
+        categories.add(legend);
+        int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);
+	}
+
+	/**
+	 * Build a series from a ILongSource object and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param plottableObject
+	 *            The data source object implementing the IDblSource interface.
+	 * @param variableID
+	 *            The variable id of the source object.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, ILongSource plottableObject,
+			Enum<?> variableID, Color color) {
+		sources.add(new LSource(legend, plottableObject, variableID));        
+        categories.add(legend);
+        int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);
+	}
+
+	/**
+	 * Build a series from a IIntSource object, using the default variableId and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param plottableObject
+	 *            The data source object implementing the IIntSource interface.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, IIntSource plottableObject, Color color) {
+		sources.add(new ISource(legend, plottableObject, IIntSource.Variables.Default));        
+        categories.add(legend);
+        int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);
+	}
+
+	/**
+	 * Build a series from a IIntSource object and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param plottableObject
+	 *            The data source object implementing the IIntSource interface.
+	 * @param variableID
+	 *            The variable id of the source object.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, IIntSource plottableObject,
+			Enum<?> variableID, Color color) {
+		sources.add(new ISource(legend, plottableObject, variableID));        
+        categories.add(legend);
+        int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);
+	}
+	
+	/**
+	 * Build a series from a generic object and specifying the colour.
+	 * 
+	 * @param legend
+	 *            The legend name of the series.
+	 * @param target
+	 *            The data source object.
+	 * @param variableName
+	 *            The variable or method name of the source object.
+	 * @param getFromMethod
+	 *            Specifies if the variableName is a field or a method.
+	 * @param color
+	 * 			  Specifies the color of the bar
+	 */
+	public void addSources(String legend, Object target, String variableName,
+			boolean getFromMethod, Color color) {
+		addSources(legend, target, variableName, getFromMethod);
+		int seriesNum = sources.size()-1;	//Start with value of 0
+		colorMap.addColor(seriesNum, color);	
+	}
+	
+	
+	class ColoredBarRenderer extends BarRenderer { 
+
+		private static final long serialVersionUID = -7678490515617294057L;
+
+		private FixedColorMap colormap;
+		
+		ColoredBarRenderer(FixedColorMap colormap) {
+			this.colormap = colormap;
+		}
+				
+		public Paint getItemPaint(final int row, final int column) 
+		{ 
+			// returns color for each column 
+			return (colormap.getColor(column));
+//			return (colormap.getMappedColor(column));
+		} 
+	}
 }
