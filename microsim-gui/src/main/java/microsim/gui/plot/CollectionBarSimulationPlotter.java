@@ -205,9 +205,10 @@ public class CollectionBarSimulationPlotter extends JInternalFrame implements Ev
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
 
-        // set the range axis to display integers only...
+        // set the range axis to display integers only...	Ross: Why???
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+//        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        rangeAxis.setStandardTickUnits(NumberAxis.createStandardTickUnits());
 
         // disable bar outlines...
         renderer = (BarRenderer) plot.getRenderer();
