@@ -142,8 +142,8 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 			return;
 		
 		try {
-			if (jList.getSelectedIndex() == 0)
-				new Console().runTool(new String[] {"-url", "jdbc:h2:input/input;AUTO_SERVER=TRUE", "-user", "sa", "-password", ""});
+			if (jList.getSelectedIndex() == 0)			//Added ";MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;FILE_LOCK=NO" in order to allow input database to be inspected, closed and then the simulation to be run. Without this, an exception is thrown as the database is still connected.
+				new Console().runTool(new String[] {"-url", "jdbc:h2:input/input;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;FILE_LOCK=NO", "-user", "sa", "-password", ""});
 			else
 				new Console().runTool(new String[] {"-url", "jdbc:h2:output/" + jList.getSelectedValue().toString() + "/database/out;AUTO_SERVER=TRUE", "-user", "sa", "-password", ""});
 		} catch (SQLException e1) {
