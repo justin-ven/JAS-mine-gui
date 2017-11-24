@@ -1,5 +1,6 @@
 package microsim.gui.shell.parameter;
 
+import java.awt.Font;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import javax.swing.JInternalFrame;
 import microsim.annotation.GUIparameter;
 import microsim.annotation.ModelParameter;
+import microsim.gui.shell.MicrosimShell;
 
 import org.metawidget.inspector.composite.CompositeInspector;
 import org.metawidget.inspector.composite.CompositeInspectorConfig;
@@ -30,7 +32,7 @@ public class ParameterFrame extends JInternalFrame {
 	
 	public ParameterFrame(Object target) {
 		super();
-		
+
 		this.target = target;
 		
 		try {
@@ -61,9 +63,10 @@ public class ParameterFrame extends JInternalFrame {
 //	            		org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE )) );
 	    			       	
 		metawidget.setInspector( new CompositeInspector( inspectorConfig ) );
-		metawidget.setToInspect( target );	
-		setSize(300, Math.max(27 * fields.size(), 80));
-				
+		metawidget.setToInspect( target );			
+		
+		setSize((int)(MicrosimShell.scale*320), (int)(MicrosimShell.scale*Math.max(30 + 26 * fields.size(), 90)));
+		
 		getContentPane().add(metawidget);
 		setVisible(true);
 	
