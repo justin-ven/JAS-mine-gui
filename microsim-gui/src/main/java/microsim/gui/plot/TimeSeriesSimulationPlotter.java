@@ -112,8 +112,9 @@ public class TimeSeriesSimulationPlotter extends JInternalFrame implements Event
         plot.setRangeGridlinePaint(Color.white);
         
         final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, false);
-        renderer.setSeriesShapesVisible(1, false);
+//        renderer.setSeriesLinesVisible(0, false);
+//        renderer.setSeriesShapesVisible(1, false);
+
         plot.setRenderer(renderer);
 
         // change the auto tick unit selection to integer units only...
