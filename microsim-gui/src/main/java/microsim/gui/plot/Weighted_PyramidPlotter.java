@@ -75,6 +75,7 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 	public static String DEFAULT_LEFT_CAT = "Males";
 	public static String DEFAULT_RIGHT_CAT = "Females";
 	public static Boolean DEFAULT_REVERSE_ORDER = false;
+	public static String DEFAULT_YAXIS_FORMAT = "#.##";
 	private static int MAXIMUM_VISIBLE_CATEGORIES = 20;
 	
 	/**
@@ -92,6 +93,8 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 	private String xaxis;
 	
 	private String yaxis;
+	
+	private String yaxisFormat = DEFAULT_YAXIS_FORMAT;
 	
 	private final String[] catNames = new String[2];
 
@@ -168,7 +171,7 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 	 * 
 	 */
 	public Weighted_PyramidPlotter(int start, int end, int step) {
-		this(DEFAULT_TITLE, DEFAULT_XAXIS, DEFAULT_YAXIS, DEFAULT_LEFT_CAT, DEFAULT_RIGHT_CAT, start, end, step, DEFAULT_REVERSE_ORDER);
+		this(DEFAULT_TITLE, DEFAULT_XAXIS, DEFAULT_YAXIS, DEFAULT_LEFT_CAT, DEFAULT_RIGHT_CAT, start, end, step, DEFAULT_REVERSE_ORDER, DEFAULT_YAXIS_FORMAT);
 	}
 	
 	/**
@@ -183,7 +186,7 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 	 * 
 	 */
 	public Weighted_PyramidPlotter(int start, int end, int step, Boolean reverseOrder) {
-		this(DEFAULT_TITLE, DEFAULT_XAXIS, DEFAULT_YAXIS, DEFAULT_LEFT_CAT, DEFAULT_RIGHT_CAT, start, end, step, reverseOrder);
+		this(DEFAULT_TITLE, DEFAULT_XAXIS, DEFAULT_YAXIS, DEFAULT_LEFT_CAT, DEFAULT_RIGHT_CAT, start, end, step, reverseOrder, DEFAULT_YAXIS_FORMAT);
 	}
 	
 	/**
@@ -202,12 +205,13 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 	 * @param reverseOrder - if true, it will reverse the groups
 	 * 
 	 */
-	public Weighted_PyramidPlotter(String title, String xaxis, String yaxis, String leftCat, String rightCat, int start, int end, int step, Boolean reverseOrder) {
+	public Weighted_PyramidPlotter(String title, String xaxis, String yaxis, String leftCat, String rightCat, int start, int end, int step, Boolean reverseOrder, String format) {
 		if (step == 0) return;
 		fixTitles(title, xaxis, yaxis, leftCat, rightCat);
+		yaxisFormat = format;
 		
 		// Create the groups based on the range, and save them to "this" 
-		GroupDetails gd = makeGroupsFromRange(start, end, step, reverseOrder);
+		GroupDetails gd = makeGroupsFromRange(start, end, step, reverseOrder, format);
 		this.groupNames = gd.groupNames;
 		this.groupRanges = gd.groupRanges;
 		
@@ -224,7 +228,7 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 	 * 
 	 */
 	public Weighted_PyramidPlotter(String[] groupNames, double[][] groupRanges) {
-		this(DEFAULT_TITLE, DEFAULT_XAXIS, DEFAULT_YAXIS, DEFAULT_LEFT_CAT, DEFAULT_RIGHT_CAT, groupNames, groupRanges);
+		this(DEFAULT_TITLE, DEFAULT_XAXIS, DEFAULT_YAXIS, DEFAULT_LEFT_CAT, DEFAULT_RIGHT_CAT, groupNames, groupRanges, DEFAULT_YAXIS_FORMAT);
 	}
 	
 	/**
@@ -240,8 +244,9 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 	 * @param groupRanges - an array of the min/max values of each group
 	 * 
 	 */
-	public Weighted_PyramidPlotter(String title, String xaxis, String yaxis, String leftCat, String rightCat, String[] groupNames, double[][] groupRanges) {
+	public Weighted_PyramidPlotter(String title, String xaxis, String yaxis, String leftCat, String rightCat, String[] groupNames, double[][] groupRanges, String format) {
 		fixTitles(title, xaxis, yaxis, leftCat, rightCat);
+		yaxisFormat = format;
 		
 		// Fix names
 		this.groupNames = groupNames==null ? null : getGroupNamesFromStrings(groupNames); 
@@ -260,7 +265,7 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 	}
 	
 	// the function that calculates groups from a range
-	private GroupDetails makeGroupsFromRange(int start, int end, int step, Boolean reverseOrder) {
+	private GroupDetails makeGroupsFromRange(int start, int end, int step, Boolean reverseOrder, String format) {
 		// First we calculate the optimal (visually at least!) number of groups, so that   
 		// the last group ends with "max" and its size is "(0.5 * step) < size < (1.5*step)"
 		int noOfGroups = (int)Math.max(Math.round((double)(end - start) / (double)step) + (Math.abs(step)==1?1:0), 1);
@@ -287,7 +292,7 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
 			// <to> is equal to the next group's  "<from> - 1", but for the last group it is equal to "end"
 			groupRanges[i][asc?1:0] = (i == noOfGroups-1) ? end : (start + (i+1) * step) - (asc?1:-1);
 			// for the name, if step=1 use the step value, else show as "from - to" (inclusive)
-			groupNames[i] = groupRanges[i][0]==groupRanges[i][1] ? String.valueOf(groupRanges[i][0]) : groupRanges[i][asc?0:1] + " - " + groupRanges[i][asc?1:0];
+			groupNames[i] = groupRanges[i][0]==groupRanges[i][1] ? new DecimalFormat(format).format(groupRanges[i][0]) : new DecimalFormat(format).format(groupRanges[i][asc?0:1]) + " - " + new DecimalFormat(format).format(groupRanges[i][asc?1:0]);
 			
 		}
 		
@@ -361,7 +366,7 @@ public class Weighted_PyramidPlotter extends JInternalFrame implements EventList
         	int min = (int)Math.min(Arrays.stream(vals[0]).min().orElse(0), Arrays.stream(vals[1]).min().orElse(0));	// if there is no data, set min to 0
         	int max = (int)Math.min(Arrays.stream(vals[0]).max().orElse(100), Arrays.stream(vals[1]).max().orElse(100));	// if there is no data, set max to 100
     		// Create the groups based on the range, and save them to the local variables 
-        	GroupDetails gd = makeGroupsFromRange(min, max, 1, true);
+        	GroupDetails gd = makeGroupsFromRange(min, max, 1, true, yaxisFormat);
         	groupNames = gd.groupNames;
         	groupRanges = gd.groupRanges;
         }
