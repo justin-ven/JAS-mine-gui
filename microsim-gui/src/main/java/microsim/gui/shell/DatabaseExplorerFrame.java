@@ -204,10 +204,10 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 	}
 	
 	void jBtnInit_actionPerformed(ActionEvent e) {
-		DatabaseUtils.databaseInputUrl = "input/input";
+		DatabaseUtils.databaseInputUrl = "./input/input";
 		DatabaseUtils.inputSchemaUpdateEntityManger();
 		try {
-			new Console().runTool(new String[] {"-url", "jdbc:h2:input/input;AUTO_SERVER=TRUE", "-user", "sa", "-password", ""});
+			new Console().runTool(new String[] {"-url", "jdbc:h2:file:./input/input;AUTO_SERVER=TRUE", "-user", "sa", "-password", ""});
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
