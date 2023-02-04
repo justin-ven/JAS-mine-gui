@@ -22,6 +22,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import microsim.engine.EngineListener;
 import microsim.engine.SimulationEngine;
 import microsim.engine.SimulationManager;
@@ -210,7 +212,8 @@ public class MicrosimShell extends JFrame {
 		try {
 			UIManager//.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
 			//.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
-			.setLookAndFeel("net.infonode.gui.laf.InfoNodeLookAndFeel");
+			//.setLookAndFeel("net.infonode.gui.laf.InfoNodeLookAndFeel");
+			.setLookAndFeel( new FlatLightLaf() );
 			SwingUtilities.updateComponentTreeUI(this);
 		} catch (Exception e) {
 			System.out.println("Error loading L&F " + e);
