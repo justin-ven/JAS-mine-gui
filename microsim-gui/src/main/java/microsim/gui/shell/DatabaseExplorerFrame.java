@@ -177,6 +177,9 @@ public class DatabaseExplorerFrame extends JInternalFrame {
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		} catch (Throwable e1) {
+			e1.printStackTrace();
+			throw e1;
 		}
 	}
 	

@@ -133,6 +133,12 @@
             <artifactId>flatlaf</artifactId>
             <version>3.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.jasmineRepo</groupId>
+            <artifactId>JAS-mine-core</artifactId>
+            <version>4.3.3</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 	
