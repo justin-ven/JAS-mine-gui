@@ -131,10 +131,10 @@ public class MultiRunFrame extends JFrame implements MultiRunListener, EngineLis
 		this.getContentPane().add(jPanelBtns);
 		jPanelBtns.add(jBtnQuit, null);
 
-		setSize(300, 180);
+		setSize(300, 210);
 		int x = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		int y = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-		setLocation((x - 300) / 2, (y - 300) / 2);
+		setLocation((x - 300) / 2, (y - 210) / 2);
 	}
 
 	public void updateModelNumber(int currentRun, SimulationEngine engine) {
